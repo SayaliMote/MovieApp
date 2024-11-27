@@ -1,0 +1,94 @@
+﻿@page "/movie-details/{imdbID}"
+@inject HttpClient Http
+
+<h1>Movie Details</h1>
+
+@if (isLoading)
+{
+    <p>Loading movie details...</p>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p class="text-danger">@errorMessage</p>
+}
+else if (movie != null)
+{
+    <div style="display: flex; gap: 20px; margin: 20px;">
+        <img src="@movie.Poster" alt="@movie.Title Poster" style="height: 300px;" />
+        <div>
+            <h2>@movie.Title (@movie.Year)</h2>
+            <p><strong>Rated:</strong> @movie.Rated</p>
+            <p><strong>Released:</strong> @movie.Released</p>
+            <p><strong>Runtime:</strong> @movie.Runtime</p>
+            <p><strong>Genre:</strong> @movie.Genre</p>
+            <p><strong>Director:</strong> @movie.Director</p>
+            <p><strong>Writer:</strong> @movie.Writer</p>
+            <p><strong>Actors:</strong> @movie.Actors</p>
+            <p><strong>Plot:</strong> @movie.Plot</p>
+            <p><strong>Language:</strong> @movie.Language</p>
+            <p><strong>Country:</strong> @movie.Country</p>
+            <p><strong>Awards:</strong> @movie.Awards</p>
+            <p><strong>IMDB Rating:</strong> @movie.imdbRating</p>
+            <p><strong>Votes:</strong> @movie.imdbVotes</p>
+            <p><strong>Box Office:</strong> @movie.BoxOffice</p>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string imdbID { get; set; }
+    private MovieDetailsModel movie; // Renamed class
+    private string errorMessage;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(imdbID))
+            {
+                errorMessage = "Invalid IMDb ID.";
+                return;
+            }
+
+            // Fetch movie details using the IMDb ID
+            movie = await Http.GetFromJsonAsync<MovieDetailsModel>($"?apikey=69cc7c36&i={imdbID}");
+            if (movie == null || string.IsNullOrWhiteSpace(movie.Title))
+            {
+                errorMessage = "Movie details not found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    public class MovieDetailsModel // Renamed class to avoid conflict
+    {
+        public string Title { get; set; }
+        public string Year { get; set; }
+        public string Rated { get; set; }
+        public string Released { get; set; }
+        public string Runtime { get; set; }
+        public string Genre { get; set; }
+        public string Director { get; set; }
+        public string Writer { get; set; }
+        public string Actors { get; set; }
+        public string Plot { get; set; }
+        public string Language { get; set; }
+        public string Country { get; set; }
+        public string Awards { get; set; }
+        public string Poster { get; set; }
+        public string imdbRating { get; set; }
+        public string imdbVotes { get; set; }
+        public string BoxOffice { get; set; }
+    }
+}

@@ -1,0 +1,93 @@
+﻿@page "/movie-search"
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h1>Movie Search</h1>
+
+<input @bind="searchTerm" placeholder="Enter movie title..." />
+<button @onclick="PerformSearch">Search</button>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p class="text-danger">@errorMessage</p>
+}
+
+@if (movies != null && movies.Any())
+{
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+        @foreach (var movie in movies)
+        {
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;" @onclick="() => NavigateToDetails(movie.imdbID)">
+                <img src="@movie.Poster" alt="@movie.Title Poster" style="width: 100%; height: auto;" />
+                <h5>@movie.Title</h5>
+                <p>Year: @movie.Year</p>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private string searchTerm = string.Empty;
+    private List<Movie> movies;
+    private string errorMessage;
+
+    // Perform search functionality
+    private async Task PerformSearch()
+    {
+        errorMessage = null; // Clear previous errors
+        movies = null;       // Clear previous search results
+
+        // Validate input
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            errorMessage = "Please enter a movie title.";
+            return;
+        }
+
+        try
+        {
+            // Make the API call
+            var response = await Http.GetFromJsonAsync<MovieSearchResult>($"?apikey=69cc7c36&s={searchTerm}");
+
+            if (response != null && response.Response == "True")
+            {
+                movies = response.Search; // Populate the movie list
+            }
+            else if (response != null && response.Response == "False")
+            {
+                errorMessage = "No results found.";
+            }
+            else
+            {
+                errorMessage = "Unexpected error occurred. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+    }
+
+    // Navigate to movie details page
+    private void NavigateToDetails(string imdbID)
+    {
+        NavigationManager.NavigateTo($"/movie-details/{imdbID}");
+    }
+
+    // Data model for search results
+    public class Movie
+    {
+        public string Title { get; set; }
+        public string Year { get; set; }
+        public string imdbID { get; set; }
+        public string Type { get; set; }
+        public string Poster { get; set; }
+    }
+
+    public class MovieSearchResult
+    {
+        public List<Movie> Search { get; set; }
+        public string TotalResults { get; set; }
+        public string Response { get; set; }
+    }
+}
