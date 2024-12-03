@@ -4,8 +4,20 @@
 
 <h1>Movie Search</h1>
 
-<input @bind="searchTerm" placeholder="Enter movie title..." />
-<button @onclick="PerformSearch">Search</button>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+    <input @bind="searchTerm" placeholder="Enter movie title..." />
+    <button @onclick="PerformSearch">Search</button>
+
+    @if (movies != null && movies.Any())
+    {
+        <select @bind="selectedSortOption">
+            <option value="TitleAsc">Sort by Title (A-Z)</option>
+            <option value="TitleDesc">Sort by Title (Z-A)</option>
+            <option value="YearAsc">Sort by Year (Oldest First)</option>
+            <option value="YearDesc">Sort by Year (Newest First)</option>
+        </select>
+    }
+</div>
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
@@ -28,16 +40,16 @@
 
 @code {
     private string searchTerm = string.Empty;
-    private List<Movie> movies;
-    private string errorMessage;
+    private List<Movie>? movies; // Nullable in case no results are found
+    private string? errorMessage; // Nullable for optional error messages
+    private string selectedSortOption = "TitleAsc"; // Default sorting option
 
-    // Perform search functionality
     private async Task PerformSearch()
     {
-        errorMessage = null; // Clear previous errors
-        movies = null;       // Clear previous search results
+        // Reset error message and movie list
+        errorMessage = null;
+        movies = null;
 
-        // Validate input
         if (string.IsNullOrWhiteSpace(searchTerm))
         {
             errorMessage = "Please enter a movie title.";
@@ -46,48 +58,73 @@
 
         try
         {
-            // Make the API call
+            // Fetch movies from the API
             var response = await Http.GetFromJsonAsync<MovieSearchResult>($"?apikey=69cc7c36&s={searchTerm}");
 
             if (response != null && response.Response == "True")
             {
-                movies = response.Search; // Populate the movie list
-            }
-            else if (response != null && response.Response == "False")
-            {
-                errorMessage = "No results found.";
+                movies = response.Search ?? new List<Movie>();
+                SortMovies(); // Sort results immediately after fetching
             }
             else
             {
-                errorMessage = "Unexpected error occurred. Please try again.";
+                // No results or invalid response
+                errorMessage = "No movies found for your search. Try a different title.";
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"An error occurred: {ex.Message}";
+            // Basic error handling for now
+            errorMessage = "Oops! Something went wrong while searching. Please try again.";
         }
     }
 
-    // Navigate to movie details page
     private void NavigateToDetails(string imdbID)
     {
+        // Navigate to the movie details page
         NavigationManager.NavigateTo($"/movie-details/{imdbID}");
     }
 
-    // Data model for search results
+    private void SortMovies()
+    {
+        if (movies == null || !movies.Any()) return;
+
+        // Sorting logic based on the selected option
+        switch (selectedSortOption)
+        {
+            case "TitleAsc":
+                movies = movies.OrderBy(m => m.Title).ToList();
+                break;
+            case "TitleDesc":
+                movies = movies.OrderByDescending(m => m.Title).ToList();
+                break;
+            case "YearAsc":
+                movies = movies.OrderBy(m => m.Year).ToList();
+                break;
+            case "YearDesc":
+                movies = movies.OrderByDescending(m => m.Year).ToList();
+                break;
+            default:
+                // Fallback to default sorting if something unexpected happens
+                movies = movies.OrderBy(m => m.Title).ToList();
+                break;
+        }
+    }
+
+    // Data models for search results
     public class Movie
     {
-        public string Title { get; set; }
-        public string Year { get; set; }
-        public string imdbID { get; set; }
-        public string Type { get; set; }
-        public string Poster { get; set; }
+        public string Title { get; set; } = string.Empty; // Default value to avoid null issues
+        public string Year { get; set; } = string.Empty;
+        public string imdbID { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string Poster { get; set; } = string.Empty;
     }
 
     public class MovieSearchResult
     {
-        public List<Movie> Search { get; set; }
-        public string TotalResults { get; set; }
-        public string Response { get; set; }
+        public List<Movie>? Search { get; set; } // Nullable since results might be empty
+        public string? TotalResults { get; set; }
+        public string? Response { get; set; }
     }
 }

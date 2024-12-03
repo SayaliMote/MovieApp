@@ -1029,3 +1029,4 @@ C:\Users\1saya\source\repos\MovieApp\MovieApp\obj\Debug\net8.0\MovieApp.dll
 C:\Users\1saya\source\repos\MovieApp\MovieApp\obj\Debug\net8.0\refint\MovieApp.dll
 C:\Users\1saya\source\repos\MovieApp\MovieApp\obj\Debug\net8.0\MovieApp.pdb
 C:\Users\1saya\source\repos\MovieApp\MovieApp\obj\Debug\net8.0\ref\MovieApp.dll
+C:\Users\1saya\source\repos\MovieApp\MovieApp\obj\Debug\net8.0\MovieApp.sourcelink.json

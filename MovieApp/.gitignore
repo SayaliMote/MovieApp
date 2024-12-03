@@ -1,1 +1,14 @@
-﻿
+﻿# Ignore Visual Studio temporary files, build results, and
+# folder-based project configuration
+.vs/
+bin/
+obj/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mac files
+.DS_Store
