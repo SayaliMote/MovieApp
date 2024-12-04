@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "TRsmSat8+ec=",
+  "dgSpecHash": "xT+G9hJlMeI=",
   "success": true,
   "projectFilePath": "C:\\Users\\1saya\\source\\repos\\MovieApp\\MovieApp\\MovieApp.csproj",
   "expectedPackageFiles": [
@@ -29,12 +29,11 @@
     "C:\\Users\\1saya\\.nuget\\packages\\microsoft.jsinterop\\8.0.10\\microsoft.jsinterop.8.0.10.nupkg.sha512",
     "C:\\Users\\1saya\\.nuget\\packages\\microsoft.jsinterop.webassembly\\8.0.10\\microsoft.jsinterop.webassembly.8.0.10.nupkg.sha512",
     "C:\\Users\\1saya\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.10\\microsoft.net.illink.tasks.8.0.10.nupkg.sha512",
-    "C:\\Users\\1saya\\.nuget\\packages\\microsoft.net.sdk.webassembly.pack\\8.0.10\\microsoft.net.sdk.webassembly.pack.8.0.10.nupkg.sha512",
+    "C:\\Users\\1saya\\.nuget\\packages\\microsoft.net.sdk.webassembly.pack\\8.0.11\\microsoft.net.sdk.webassembly.pack.8.0.11.nupkg.sha512",
     "C:\\Users\\1saya\\.nuget\\packages\\system.io.pipelines\\9.0.0\\system.io.pipelines.9.0.0.nupkg.sha512",
     "C:\\Users\\1saya\\.nuget\\packages\\system.net.http.json\\9.0.0\\system.net.http.json.9.0.0.nupkg.sha512",
     "C:\\Users\\1saya\\.nuget\\packages\\system.text.encodings.web\\9.0.0\\system.text.encodings.web.9.0.0.nupkg.sha512",
-    "C:\\Users\\1saya\\.nuget\\packages\\system.text.json\\9.0.0\\system.text.json.9.0.0.nupkg.sha512",
-    "C:\\Users\\1saya\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.10\\microsoft.netcore.app.runtime.mono.browser-wasm.8.0.10.nupkg.sha512"
+    "C:\\Users\\1saya\\.nuget\\packages\\system.text.json\\9.0.0\\system.text.json.9.0.0.nupkg.sha512"
   ],
   "logs": []
 }
